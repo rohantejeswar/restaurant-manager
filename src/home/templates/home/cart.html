@@ -1,0 +1,57 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <h3>Cart</h3> <hr>
+
+    <table class="table">
+        <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Remove</th>
+        </tr>
+        {% for item in items %} 
+            <tr>
+                <td>{{ item.name }}</td>
+                <td class="text-muted">{{ item.price }}</td>
+                <td class="text-muted" id="{{ item.id }}.quantity">
+                        <input type="button" value="-" class="minus"><input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="input-text qty text" size="4" pattern="" inputmode=""><input type="button" value="+" class="plus">
+                </td>
+                <td id="{{ item.id }}.price">{{ item.price }}</td>
+                <td><button class="btn btn-outline-danger btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></button></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td id="total">{{ ids|join:',' }}</td>
+            <td><button class="btn btn-info">Submit Order</button></td>
+        </tr>
+    </table>
+
+    
+{% endblock content %}
+
+{% block js %}
+<script>
+    $(document).ready(function () {
+        console.log("Load");
+        var ids_str = "{{ ids|join:',' }}";
+        ids = ids_str.split(',');
+        
+        var sum = 0;
+        console.log(sum)
+        for (var i = 0, len = ids.length; i < len; i++) {
+            quant = $("#" + ids[i] + ".quantity").val();
+            price = $("#" + ids[i] + ".price").val();
+            console.log("Loop" + ids[i] + quant + price);
+            sum += Number(price) * Number(quant);
+        }
+        console.log(sum)
+    });
+</script>
+{% endblock js %}

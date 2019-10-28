@@ -1,0 +1,28 @@
+{% extends "blog/base.html" %}
+
+{% block title %}
+	{% if title %}
+		<title>Restaurant Manager - {{ title }}</title>
+	{% else %}
+		<title>Restaurant Manager</title>
+	{% endif %}
+{% endblock title %}
+
+{% block content %}
+	<article class="media content-section">
+		<button class="btn btn-outline-warning">Create Post</button>
+	</article>
+	{% for post in posts %}
+		<article class="media content-section">
+			<img class="rounded-circle article-img mt-2" src="{{ post.author.profile.image.url }}">
+			<div class="media-body">
+			    <div class="article-metadata">
+			      <a class="mr-2" href="#">{{ post.author }}</a>
+			      <small class="text-muted">{{ post.date_posted|date:'j F Y' }}</small>
+			    </div>
+			    <h2><a class="article-title" href="{% url 'blog-detail' post.id %}">{{ post.title }}</a></h2>
+			    <p class="article-content">{{ post.content }}</p>
+			</div>
+		</article>
+	{% endfor %}
+{% endblock content %}

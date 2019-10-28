@@ -1,0 +1,85 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+    <button id="order" class="btn btn-warning">My Orders</button>
+    <hr>
+    <div class="row" >
+        {% for menu in menus %}
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="{{ menu.image.url }}" class="card-img-top" alt="{{ menu.name }}" 
+                    style="width: 100%; height: 250px; object-fit: cover;" />
+                    <div class="card-body">
+                        <h5 class="card-text">{{ menu.name }}</h5> <br>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <p class="card-text mt-1">₹ {{ menu.price }}</p>
+                            </div>
+                            <div class="col-xl-6">
+                                <div style="float: right;" >
+                                    <button id="{{ menu.id }}" class="btn btn-outline-info" >Add Order</button>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted text-centered container-fluid" style="display: inline;">
+                        <div class="row">
+                            <div class="col-md-8">
+                                {% if menu.veg == True %}
+                                    <img src="/media/veg.png" alt="veg" width="25" height="25">
+                                {% else %}
+                                    <img src="/media/non-veg.png" alt="non-veg" width="25" height="25">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <span style="float:right; text-align: right;">
+                                    {{ menu.rating }}
+                                    {{ menu.votes }}
+                                </span>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+    
+            <!-- if last column in row -->
+            {% if forloop.counter|divisibleby:"4" and not forloop.last %}
+            </div><br><div class="row">
+            {% endif %}
+        
+        {% endfor %}
+    </div>
+{% endblock content %}
+
+{% block js %}
+<script>
+    console.log("init");
+    $(document).ready(function () {
+        console.log("Loaded");
+        var ids = [];
+
+        $('button').click(function() {
+            var id = $(this).attr('id');
+            
+            if (id != 'order') {
+                if (jQuery.inArray(id, ids) == -1) ids.push(id); else ids.pop(id);
+                $(this).toggleClass("btn-outline-info");
+                $(this).toggleClass("btn-info");
+            } else {
+                window.location.href = ('cart?id=' + ids.join('%2C'));
+                /*$.get("/cart/", {
+                    'id': ids.join(','),
+                }, function(data) {
+                    if(data == 0){ 
+                        console.log('ERROR!');
+                    } else{
+                        console.log('Do something!');
+                        window.location('/cart/');
+                    }
+                });*/
+            }
+        });
+    });
+</script>
+{% endblock js %}
